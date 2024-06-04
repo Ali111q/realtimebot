@@ -31,9 +31,9 @@ const getSettings = async () => {
     return null;
   }
 };
-const degreesByCountry = async (id) => {
+const degreesByCountry = async (id, pageNumber) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/degrees?countryId=${id}`;
+  const url = `https://study-backend.app-seen.com/api/degrees?countryId=${id}&pageNumber=${pageNumber??1}`;
 
   try {
     // Make a request to the API

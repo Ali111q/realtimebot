@@ -1,4 +1,179 @@
-const bot = require("./src/bot");
+const TelegramBot = require("node-telegram-bot-api");
+const dotenv = require("dotenv");
+const { getCountries, getSettings, degreesByCountry, collageByDegree, unis, asks } = require("./src/api");
+const { storeCountryId, getCountryId } = require("./src/helper/sqlit_database");
 
-// Start the bot polling
-bot.startPolling();
+// Load environment variables from .env file
+dotenv.config();
+
+// Access the bot token from the environment variable
+const TOKEN = process.env.TOKEN;
+const bot = new TelegramBot(TOKEN, { polling: true });
+
+bot.onText(/\/start/, async (msg) => {
+    const countries = await getCountries();
+    const settings = await getSettings();
+    const chatId = msg.chat.id;
+    bot.sendVideo(
+        chatId,
+        "https://study-backend.app-seen.com/" + settings.data[0].welcomeVideoUrl,
+        {
+          caption: settings.data[0].welcomeMessage,
+          reply_markup: {
+            inline_keyboard: [
+              ...countries.data.map((e) => [
+                {
+                  text: e.name,
+                  callback_data: `country_${e.name}_${
+                    e.id
+                  }`,
+                },
+              ]),
+            ],
+          },
+          parse_mode: "Markdown",
+        }
+      );
+    
+
+      
+});
+
+bot.on("callback_query", async (query) => {
+    const chatId = query.message.chat.id;
+    const messageId = query.message.message_id;
+    const callbackData = query.data;
+    console.log(callbackData);
+    switch (callbackData.split("_")[0]) {
+      case "country":
+       await storeCountryId(chatId, callbackData.split("_")[2]);
+        degreesByCountry(
+          callbackData.split("_")[2],
+          1
+        ).then((degrees) => {
+          bot.sendMessage( chatId,callbackData.split("_")[1], {
+           
+          
+            reply_markup: {
+              inline_keyboard: [
+                [{text:`اسئلة بخصوص ${callbackData.split("_")[1]}`,callback_data:`ask_${callbackData.split("_")[2]}`}],
+                ...degrees.data.map((e) => [
+                  {
+                    text: e.name,
+                    callback_data: `degree_${e.name}_${
+                      e.id
+                    }`,
+                  },
+                ]),
+              ],
+            },
+            parse_mode: "Markdown",
+          });
+        });
+        break;
+        case "degree":
+            collageByDegree(
+                callbackData.split("_")[2]
+            ).then((collages) => {
+                bot.sendMessage( chatId,callbackData.split("_")[1], {
+                 
+                
+                    reply_markup: {
+                        inline_keyboard: [
+                            // Splitting the collages into pairs for two columns
+                            ...collages.data.reduce((accumulator, currentValue, index) => {
+                                // Check if it's the first collage of a pair
+                                if (index % 2 === 0) {
+                                    accumulator.push([
+                                        // Add the first collage button
+                                        {
+                                            text: currentValue.name,
+                                            callback_data: `collage_${callbackData.split("_")[1]}_${currentValue.id}`,
+                                        },
+                                        // Check if there's a second collage available
+                                        collages.data[index + 1] ? 
+                                        // Add the second collage button
+                                        {
+                                            text: collages.data[index + 1].name,
+                                            callback_data: `collage_${callbackData.split("_")[1]}_${collages.data[index + 1].id}`,
+                                        } : null, // If no second collage, add null
+                                    ].filter(Boolean)); // Filter out null values
+                                }
+                                return accumulator;
+                            }, []),
+                        ],
+                    },
+                    
+                parse_mode: "Markdown",
+                });
+            });
+            break;
+            case "collage":
+                const countryId = await getCountryId(chatId);
+                unis(countryId,
+                    callbackData.split("_")[2]
+                ).then((universities) => {
+                    const messageText = `الجامعات المتوفره:\n\n${universities.data.map(
+                        (e, index) =>
+                          `${index + 1}- ${e.universityName}: ${e.price} ${
+                            e.isValid ? "🟢" : "🔴"
+                          } \n`
+                      )}`;
+                    bot.sendMessage( chatId,messageText, {
+                        reply_markup: {
+                            inline_keyboard: [
+                                [{ text: "Whatsapp 📞", url: "https://wa.me/9647737503949" }],
+                                [{ text: "Telegram 💬", url: "https://t.me/sln_99" }],
+                            ],
+                        },
+                        parse_mode: "Markdown",
+                    });
+                });
+               
+                break;
+                case "ask":
+                    asks(
+                        callbackData.split("_")[1]
+                    ).then((questions) => {
+                        bot.sendMessage( chatId,"اهم الاسئلة", {
+                            reply_markup: {
+                                inline_keyboard: [
+                                    ...questions.data.map((e) =>{
+                                        
+                                        if (e.videoUrl == null) {
+                                            return [
+                                                {
+                                                    text: e.questionTitle,
+                                                    callback_data: `answer_${e.questionAnswer}`,
+                                                },
+                                            ];
+                                            
+                                        }
+                                        else{
+
+                                        
+                                      return  [
+                                        {
+                                            text: e.questionTitle,
+                                            callback_data: `answerv_${e.videoUrl}`,
+                                        },
+                                    ]}}),
+                                ],
+                            },
+                            parse_mode: "Markdown",
+                        });
+                    });
+                                  break;
+                    case "answer":
+                        bot.sendMessage( chatId,callbackData.split("_")[1], {
+                         
+                            parse_mode: "Markdown",
+                        });
+                        break;
+                        case "answerv":
+                            bot.sendVideo( "https://study-backend.app-seen.com/"+ chatId,callbackData.split("_")[1], {
+                                parse_mode: "Markdown",
+                            });
+                            break;
+    }
+  });

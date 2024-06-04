@@ -6,14 +6,21 @@ exports.byDegree = async (bot, query, degreeName, degreeId) => {
   const chatId = query.message.chat.id;
   const messageId = query.message.message_id;
   const callbackData = query.data;
-
+  
   // Construct caption
 
   // Edit the message caption
   bot.editMessageText("chose a collage", {
     chat_id: chatId,
     message_id: messageId,
-    reply_markup: rootInlineKeyboard(collages.data, "collage", null, false),
+    reply_markup:{
+      inline_keyboard:[
+        
+        ...collages.data.map(e=>{
+          return [{text:e.name,callback_data:`collage_${degreeName}_${e.id}`}]})
+      ]
+      
+    },
     parse_mode: "Markdown",
   });
 

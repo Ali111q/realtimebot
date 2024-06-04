@@ -31,7 +31,7 @@ exports.byCollage = async (bot, query, collageName, collageId) => {
         [
           {
             text: "الرجوع الى القائمة الرئيسية",
-            callback_data: "start_start",
+            callback_data: `degree_ssss_${collageName}`,
           },
         ],
       ],

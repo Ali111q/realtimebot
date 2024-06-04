@@ -14,12 +14,15 @@ exports.ask = async (bot, query, countryId) => {
     messageId: messageId,
     reply_markup: {
       inline_keyboard: [
-        ...askss.data.map((e) => [
+        ...askss.data.map((e) =>{
+          const key = e.videoUrl == null?'answer':'answerV'
+          const answer =  e.videoUrl?? e.questionAnswer??"no answer"
+          return [
           {
             text: e.questionTitle,
-            callback_data: `answer_${countryId}_${e.questionAnswer}`,
+            callback_data: `${key}_${answer }`,
           },
-        ]),
+        ]}),
       ],
     },
     parse_mode: "Markdown",

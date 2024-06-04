@@ -17,7 +17,7 @@ const { byCountry } = require("./commands/keyboard_commands/by_country");
 const { byDegree } = require("./commands/keyboard_commands/by_degree");
 const { byCollage } = require("./commands/keyboard_commands/by_collage");
 const { ask } = require("./commands/keyboard_commands/ask");
-const { answer } = require("./commands/keyboard_commands/answer");
+const { answer, answerVideo } = require("./commands/keyboard_commands/answer");
 var questions = [];
 // Attach command handlers
 bot.onText(/\/start/, handleStartCommand(bot));
@@ -33,7 +33,9 @@ bot.on("callback_query", async (query) => {
         bot,
         query,
         callbackData.split("_")[1],
-        callbackData.split("_")[2]
+        callbackData.split("_")[2],
+        callbackData.split("_")[3],
+
       );
       break;
     case "degree":
@@ -41,7 +43,8 @@ bot.on("callback_query", async (query) => {
         bot,
         query,
         callbackData.split("_")[1],
-        callbackData.split("_")[2]
+        callbackData.split("_")[2],
+
       );
       break;
     case "collage":
@@ -59,10 +62,17 @@ bot.on("callback_query", async (query) => {
       answer(
         bot,
         query,
-        callbackData.split("_")[2],
-        callbackData.split("_")[1]
+        callbackData.split("_")[1],
       );
       break;
+
+    case "answerV":
+      answerVideo(
+        bot,
+        query,
+        callbackData.split("_")[1],
+
+      );
     default:
       break;
   }
