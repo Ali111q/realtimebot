@@ -47,9 +47,9 @@ const degreesByCountry = async (id, pageNumber) => {
   }
 };
 
-const collageByDegree = async (id) => {
+const collageByDegree = async (id, page) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/fields?degreeId=${id}`;
+  const url = `https://study-backend.app-seen.com/api/fields?degreeId=${id}&pageNumber=${page??1}`;
 
   try {
     // Make a request to the API
@@ -64,7 +64,7 @@ const collageByDegree = async (id) => {
 };
 const unis = async (countryId, fieldId) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/degreefields?fieldId=${fieldId}&countryId=${countryId}`;
+  const url = `https://study-backend.app-seen.com/api/degreefields?fieldId=${fieldId}&countryId=${countryId}&pageNumber=0`;
 
   try {
     // Make a request to the API

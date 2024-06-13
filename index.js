@@ -5,7 +5,7 @@ const { storeCountryId, getCountryId } = require("./src/helper/sqlit_database");
 
 // Load environment variables from .env file
 dotenv.config();
-
+var qustionss = [];
 // Access the bot token from the environment variable
 const TOKEN = process.env.TOKEN;
 const bot = new TelegramBot(TOKEN, { polling: true });
@@ -24,7 +24,7 @@ bot.onText(/\/start/, async (msg) => {
               ...countries.data.map((e) => [
                 {
                   text: e.name,
-                  callback_data: `country_${e.name}_${
+                  callback_data: `country_${e.name.split(" ")[0]}_${
                     e.id
                   }`,
                 },
@@ -73,8 +73,9 @@ bot.on("callback_query", async (query) => {
         break;
         case "degree":
             collageByDegree(
-                callbackData.split("_")[2]
+                callbackData.split("_")[2],callbackData.split("_")[3]
             ).then((collages) => {
+              console.log(collages);
                 bot.sendMessage( chatId,callbackData.split("_")[1], {
                  
                 
@@ -101,6 +102,16 @@ bot.on("callback_query", async (query) => {
                                 }
                                 return accumulator;
                             }, []),
+                            // check if it's not first or last page and make 2 pagination buttons
+                           
+                            collages.pagesCount > collages.currentPage?[
+                              {
+                                text: "التالي",
+                                callback_data: `degree_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
+                            },
+                            ]:
+                           []
+                            ,
                         ],
                     },
                     
@@ -135,16 +146,17 @@ bot.on("callback_query", async (query) => {
                     asks(
                         callbackData.split("_")[1]
                     ).then((questions) => {
+                       qustionss = [...questions.data]
                         bot.sendMessage( chatId,"اهم الاسئلة", {
                             reply_markup: {
                                 inline_keyboard: [
-                                    ...questions.data.map((e) =>{
+                                    ...qustionss.map((e, index) =>{
                                         
                                         if (e.videoUrl == null) {
                                             return [
                                                 {
                                                     text: e.questionTitle,
-                                                    callback_data: `answer_${e.questionAnswer}`,
+                                                    callback_data: `answer_${index}`,
                                                 },
                                             ];
                                             
@@ -165,7 +177,7 @@ bot.on("callback_query", async (query) => {
                     });
                                   break;
                     case "answer":
-                        bot.sendMessage( chatId,callbackData.split("_")[1], {
+                        bot.sendMessage( chatId,qustionss[callbackData.split("_")[1]].questionAnswer, {
                          
                             parse_mode: "Markdown",
                         });
