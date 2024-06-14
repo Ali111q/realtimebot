@@ -1,10 +1,11 @@
 const TelegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
 const { getCountries, getSettings, degreesByCountry, collageByDegree, unis, asks } = require("./src/api");
-const { storeCountryId, getCountryId } = require("./src/helper/sqlit_database");
+const { storeCountryId, getCountryId, storeDegreeId, getDegreeId } = require("./src/helper/sqlit_database");
 
 // Load environment variables from .env file
 dotenv.config();
+var countryId;
 var qustionss = [];
 // Access the bot token from the environment variable
 const TOKEN = process.env.TOKEN;
@@ -72,9 +73,10 @@ bot.on("callback_query", async (query) => {
         });
         break;
         case "degree":
-          const coId = await getCountryId(chatId);
+         countryId = await getCountryId(chatId);
+          storeDegreeId(chatId, callbackData.split("_")[2]);
             collageByDegree(
-                callbackData.split("_")[2],callbackData.split("_")[3], coId
+                callbackData.split("_")[2],callbackData.split("_")[3], countryId
             ).then((collages) => {
                 bot.sendMessage( chatId,callbackData.split("_")[1], {
                  
@@ -120,9 +122,9 @@ bot.on("callback_query", async (query) => {
             });
             break;
         case "degre":
-          const od = await getCountryId(chatId);
+       
             collageByDegree(
-                callbackData.split("_")[2],callbackData.split("_")[3], od
+                callbackData.split("_")[2],callbackData.split("_")[3], countryId
             ).then((collages) => {
                 bot.editMessageText(callbackData.split("_")[1], {
                  
@@ -187,13 +189,10 @@ bot.on("callback_query", async (query) => {
             });
             break;
             case "collage":
-                const countryId = await getCountryId(chatId);
-                console.log(countryId);
-                console.log(callbackData.split("_")[2]);
+                const degId = await getDegreeId(chatId);
                 unis(countryId, 
-                    callbackData.split("_")[2]
+                    callbackData.split("_")[2], degId
                 ).then((universities) => {
-                  console.log(universities);
                     const messageText = `الجامعات المتوفره:\n\n${universities.data.map(
                         (e, index) =>
                           `${index + 1}- ${e.universityName}: ${e.price}$ ${

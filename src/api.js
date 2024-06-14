@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { getDegreeId } = require("./helper/sqlit_database");
 
 // Define the API function to fetch a random dog image
 const getCountries = async () => {
@@ -48,6 +49,7 @@ const degreesByCountry = async (id, pageNumber) => {
 };
 
 const collageByDegree = async (id, page, countryId) => {
+  
   // URL for the Dog API endpoint to fetch a random dog image
   const url = `https://study-backend.app-seen.com/api/fields?degreeId=${id}&pageNumber=${page??1}&countryId=${countryId}`;
   console.log(url);
@@ -62,9 +64,9 @@ const collageByDegree = async (id, page, countryId) => {
     return null;
   }
 };
-const unis = async (countryId, fieldId) => {
+const unis = async (countryId, fieldId, degreeId) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/degreefields?fieldId=${fieldId}&countryId=${countryId}`;
+  const url = `https://study-backend.app-seen.com/api/degreefields?fieldId=${fieldId}&countryId=${countryId}&degreeId=${degreeId}`;
   console.log(url);
   try {
     // Make a request to the API
