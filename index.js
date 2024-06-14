@@ -72,10 +72,10 @@ bot.on("callback_query", async (query) => {
         });
         break;
         case "degree":
+          const coId = await getCountryId(chatId);
             collageByDegree(
-                callbackData.split("_")[2],callbackData.split("_")[3]
+                callbackData.split("_")[2],callbackData.split("_")[3], coId
             ).then((collages) => {
-              console.log(collages);
                 bot.sendMessage( chatId,callbackData.split("_")[1], {
                  
                 
@@ -107,7 +107,74 @@ bot.on("callback_query", async (query) => {
                             collages.pagesCount > collages.currentPage?[
                               {
                                 text: "التالي",
-                                callback_data: `degree_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
+                                callback_data: `degre_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
+                            },
+                            ]:
+                           []
+                            ,
+                        ],
+                    },
+                    
+                parse_mode: "Markdown",
+                });
+            });
+            break;
+        case "degre":
+          const od = await getCountryId(chatId);
+            collageByDegree(
+                callbackData.split("_")[2],callbackData.split("_")[3], od
+            ).then((collages) => {
+                bot.editMessageText(callbackData.split("_")[1], {
+                 
+                message_id: query.message.message_id,
+                chat_id: chatId,
+                    reply_markup: {
+                        inline_keyboard: [
+                            // Splitting the collages into pairs for two columns
+                            ...collages.data.reduce((accumulator, currentValue, index) => {
+                                // Check if it's the first collage of a pair
+                                if (index % 2 === 0) {
+                                    accumulator.push([
+                                        // Add the first collage button
+                                        {
+                                            text: currentValue.name,
+                                            callback_data: `collage_${callbackData.split("_")[1]}_${currentValue.id}`,
+                                        },
+                                        // Check if there's a second collage available
+                                        collages.data[index + 1] ? 
+                                        // Add the second collage button
+                                        {
+                                            text: collages.data[index + 1].name,
+                                            callback_data: `collage_${callbackData.split("_")[1]}_${collages.data[index + 1].id}`,
+                                        } : null, // If no second collage, add null
+                                    ].filter(Boolean)); // Filter out null values
+                                }
+                                return accumulator;
+                            }, []),
+                            // check if it's not first or last page and make 2 pagination buttons
+                           
+                            collages.pagesCount > collages.currentPage&&collages.currentPage>1?[
+                              {
+                                text: "التالي",
+                                callback_data: `degre_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
+                            },
+                              {
+                                text: "السابق",
+                                callback_data: `degre_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage - 1}`,
+                            },
+                            ]:
+                            collages.pagesCount > collages.currentPage?[
+                              {
+                                text: "التالي",
+                                callback_data: `degreen_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
+                            },
+                          
+                            ]:
+                           collages.currentPage>1?[
+                           
+                              {
+                                text: "السابق",
+                                callback_data: `degreen_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage - 1}`,
                             },
                             ]:
                            []
@@ -121,12 +188,15 @@ bot.on("callback_query", async (query) => {
             break;
             case "collage":
                 const countryId = await getCountryId(chatId);
-                unis(countryId,
+                console.log(countryId);
+                console.log(callbackData.split("_")[2]);
+                unis(countryId, 
                     callbackData.split("_")[2]
                 ).then((universities) => {
+                  console.log(universities);
                     const messageText = `الجامعات المتوفره:\n\n${universities.data.map(
                         (e, index) =>
-                          `${index + 1}- ${e.universityName}: ${e.price} ${
+                          `${index + 1}- ${e.universityName}: ${e.price}$ ${
                             e.isValid ? "🟢" : "🔴"
                           } \n`
                       )}`;
