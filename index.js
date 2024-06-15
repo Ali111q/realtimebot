@@ -5,7 +5,7 @@ const { storeCountryId, getCountryId, storeDegreeId, getDegreeId } = require("./
 
 // Load environment variables from .env file
 dotenv.config();
-var countryId;
+
 var qustionss = [];
 // Access the bot token from the environment variable
 const TOKEN = process.env.TOKEN;
@@ -73,7 +73,7 @@ bot.on("callback_query", async (query) => {
         });
         break;
         case "degree":
-         countryId = await getCountryId(chatId);
+        const countryId = await getCountryId(chatId);
           storeDegreeId(chatId, callbackData.split("_")[2]);
             collageByDegree(
                 callbackData.split("_")[2],callbackData.split("_")[3], countryId
@@ -122,9 +122,9 @@ bot.on("callback_query", async (query) => {
             });
             break;
         case "degre":
-       
+          const countryId2 = await getCountryId(chatId);
             collageByDegree(
-                callbackData.split("_")[2],callbackData.split("_")[3], countryId
+                callbackData.split("_")[2],callbackData.split("_")[3], countryId2
             ).then((collages) => {
                 bot.editMessageText(callbackData.split("_")[1], {
                  
@@ -189,8 +189,9 @@ bot.on("callback_query", async (query) => {
             });
             break;
             case "collage":
+              const countryId3 = await getCountryId(chatId);
                 const degId = await getDegreeId(chatId);
-                unis(countryId, 
+                unis(countryId3, 
                     callbackData.split("_")[2], degId
                 ).then((universities) => {
                     const messageText = `الجامعات المتوفره:\n\n${universities.data.map(

@@ -16,13 +16,12 @@ db.run(`CREATE TABLE IF NOT EXISTS user_country_mapping (
   country_id INTEGER,
   degree_id INTEGER
 )`);
-
-// Function to store country ID with user ID
 function storeCountryId(userId, countryId) {
   return new Promise((resolve, reject) => {
     db.run(
-      `INSERT OR REPLACE INTO user_country_mapping (user_id, country_id) VALUES (?, ?)`,
-      [userId, countryId],
+      `INSERT OR REPLACE INTO user_country_mapping (user_id, degree_id, country_id) 
+       VALUES (?, (SELECT degree_id FROM user_country_mapping WHERE user_id = ?), ?)`,
+      [userId, userId, countryId],
       function (err) {
         if (err) {
           reject(err);
@@ -38,8 +37,10 @@ function storeCountryId(userId, countryId) {
 function storeDegreeId(userId, degreeId) {
   return new Promise((resolve, reject) => {
     db.run(
-      `INSERT OR REPLACE INTO user_country_mapping (user_id, degree_id) VALUES (?, ?)`,
-      [userId, degreeId],
+      `INSERT OR REPLACE INTO user_country_mapping (user_id, degree_id, country_id) 
+       VALUES (?, (SELECT degree_id FROM user_country_mapping WHERE user_id = ?), 
+               (SELECT country_id FROM user_country_mapping WHERE user_id = ?))`,
+      [userId, userId, userId],
       function (err) {
         if (err) {
           reject(err);
@@ -50,6 +51,7 @@ function storeDegreeId(userId, degreeId) {
     );
   });
 }
+
 
 // Function to get country ID by user ID
 function getCountryId(userId) {
