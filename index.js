@@ -47,7 +47,7 @@ bot.on("callback_query", async (query) => {
   switch (callbackData.split("_")[0]) {
     case "country":
       await storeCountryId(chatId, callbackData.split("_")[2]);
-      const countryId31 = await getCountryId(chatId);
+      const countryId31 = callbackData.split("_")[2];
       const countryName = await getCountryById(countryId31);
       degreesByCountry(
         callbackData.split("_")[2],
@@ -307,9 +307,12 @@ bot.on("callback_query", async (query) => {
       });
       break;
     case "answerv":
-      bot.sendVideo("https://study-backend.app-seen.com/" + chatId, callbackData.split("_")[1], {
-        parse_mode: "Markdown",
-      });
+      bot.sendVideo(
+        chatId,
+        "https://study-backend.app-seen.com/" + callbackData.split("_")[1],
+        {
+          parse_mode: "Markdown",
+        });
       break;
   }
 });
