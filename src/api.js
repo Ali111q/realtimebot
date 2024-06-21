@@ -34,7 +34,7 @@ const getSettings = async () => {
 };
 const degreesByCountry = async (id, pageNumber) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/degrees?countryId=${id}&pageNumber=${pageNumber??1}`;
+  const url = `https://study-backend.app-seen.com/api/degrees?countryId=${id}&pageNumber=${pageNumber ?? 1}`;
 
   try {
     // Make a request to the API
@@ -49,9 +49,9 @@ const degreesByCountry = async (id, pageNumber) => {
 };
 
 const collageByDegree = async (id, page, countryId) => {
-  
+
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/fields?degreeId=${id}&pageNumber=${page??1}&countryId=${countryId}`;
+  const url = `https://study-backend.app-seen.com/api/fields?degreeId=${id}&pageNumber=${page ?? 1}&countryId=${countryId}`;
   console.log(url);
   try {
     // Make a request to the API
@@ -96,6 +96,20 @@ const asks = async (countryId) => {
   }
 };
 
+const getCountryById = async (countryId) => {
+  const url = `https://study-backend.app-seen.com/api/countrys/${countryId}`;
+
+  try {
+    // Make a request to the API
+    const response = await axios.get(url);
+    console.log(response.data);
+    // Return the image URL from the API response
+    return response.data; // 'message' field contains the image URL
+  } catch (error) {
+    console.error("Error fetching dog image:", error);
+    return null;
+  }
+}
 module.exports = {
   degreesByCountry,
   collageByDegree,
@@ -103,4 +117,5 @@ module.exports = {
   getSettings,
   unis,
   asks,
+  getCountryById
 };

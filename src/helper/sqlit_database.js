@@ -38,9 +38,9 @@ function storeDegreeId(userId, degreeId) {
   return new Promise((resolve, reject) => {
     db.run(
       `INSERT OR REPLACE INTO user_country_mapping (user_id, degree_id, country_id) 
-       VALUES (?, (SELECT degree_id FROM user_country_mapping WHERE user_id = ?), 
+       VALUES (?, (?), 
                (SELECT country_id FROM user_country_mapping WHERE user_id = ?))`,
-      [userId, userId, userId],
+      [userId, degreeId, userId],
       function (err) {
         if (err) {
           reject(err);
