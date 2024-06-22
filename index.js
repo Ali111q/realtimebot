@@ -237,8 +237,8 @@ bot.on("callback_query", async (query) => {
           chat_id: chatId,
           reply_markup: {
             inline_keyboard: [
-              [{ text: "Whatsapp 📞", url: "https://wa.me/9647737503949" }],
-              [{ text: "Telegram 💬", url: "https://t.me/sln_99" }],
+              [{ text: "Whatsapp 📞", url: "https://wa.link/qztn5d" }],
+              [{ text: "Telegram 💬", url: "https://t.me/derastek" }],
               [{
                 text: "رجوع",
                 callback_data: `degree_${callbackData.split("_")[1]}_${degId}`,
