@@ -110,6 +110,20 @@ const getCountryById = async (countryId) => {
     return null;
   }
 }
+const getFieldById = async (fieldId) => {
+  const url = `https://study-backend.app-seen.com/api/fields/${fieldId}`;
+
+  try {
+    // Make a request to the API
+    const response = await axios.get(url);
+    console.log(response.data);
+    // Return the image URL from the API response
+    return response.data; // 'message' field contains the image URL
+  } catch (error) {
+    console.error("Error fetching dog image:", error);
+    return null;
+  }
+}
 module.exports = {
   degreesByCountry,
   collageByDegree,
@@ -117,5 +131,6 @@ module.exports = {
   getSettings,
   unis,
   asks,
-  getCountryById
+  getCountryById,
+  getFieldById
 };

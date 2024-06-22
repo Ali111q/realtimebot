@@ -1,6 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
-const { getCountries, getSettings, degreesByCountry, collageByDegree, unis, asks, getCountryById } = require("./src/api");
+const { getCountries, getSettings, degreesByCountry, collageByDegree, unis, asks, getCountryById, getFieldById } = require("./src/api");
 const { storeCountryId, getCountryId, storeDegreeId, getDegreeId } = require("./src/helper/sqlit_database");
 
 // Load environment variables from .env file
@@ -223,11 +223,11 @@ bot.on("callback_query", async (query) => {
     case "collage":
       const countryId3 = await getCountryId(chatId);
       const degId = await getDegreeId(chatId);
-
+      const field = await getFieldById(callbackData.split("_")[2]);
       unis(countryId3,
         callbackData.split("_")[2], degId
       ).then((universities) => {
-        const messageText = `الجامعات المتوفره:\n\n${universities.data.map(
+        const messageText = `الجامعات المتوفره في (${field.name}):\n\n${universities.data.map(
           (e, index) =>
             `${index + 1}- ${e.universityName}: ${e.price}$ ${e.isValid ? "🟢" : "🔴"
             } \n`
