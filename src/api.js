@@ -124,6 +124,19 @@ const getFieldById = async (fieldId) => {
     return null;
   }
 }
+
+const getMedicalFields = async () => {
+  const url = 'https://study-backend.app-seen.com/api/medicalfield';
+  try {
+    // Make a request to the API
+    const response = await axios.get(url);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching dog image:", error);
+    return null;
+  }
+}
 module.exports = {
   degreesByCountry,
   collageByDegree,
@@ -132,5 +145,6 @@ module.exports = {
   unis,
   asks,
   getCountryById,
-  getFieldById
+  getFieldById,
+  getMedicalFields
 };

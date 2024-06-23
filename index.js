@@ -1,6 +1,6 @@
 const TelegramBot = require("node-telegram-bot-api");
 const dotenv = require("dotenv");
-const { getCountries, getSettings, degreesByCountry, collageByDegree, unis, asks, getCountryById, getFieldById } = require("./src/api");
+const { getCountries, getSettings, degreesByCountry, collageByDegree, unis, asks, getCountryById, getFieldById, getMedicalFields } = require("./src/api");
 const { storeCountryId, getCountryId, storeDegreeId, getDegreeId } = require("./src/helper/sqlit_database");
 
 // Load environment variables from .env file
@@ -30,6 +30,7 @@ bot.onText(/\/start/, async (msg) => {
                 }`,
             },
           ]),
+          [{ text: "التخصصات الطبية", callback_data: "medical" }],
         ],
       },
       parse_mode: "Markdown",
@@ -348,5 +349,14 @@ bot.on("callback_query", async (query) => {
           parse_mode: "Markdown",
         });
       break;
+    case 'medical':
+      const medical = await getMedicalFields();
+      bot.sendVideo(
+        chatId,
+        "https://study-backend.app-seen.com/" + medical.data[0].videoUrl,
+        {
+          parse_mode: "Markdown",
+        });
+
   }
 });
