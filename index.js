@@ -15,11 +15,12 @@ bot.onText(/\/start/, async (msg) => {
   const countries = await getCountries();
   const settings = await getSettings();
   const chatId = msg.chat.id;
-  bot.sendVideo(
+  bot.sendMessage(
     chatId,
-    "https://study-backend.app-seen.com/" + settings.data[0].welcomeVideoUrl,
+    settings.data[0].welcomeMessage,
+
+
     {
-      caption: settings.data[0].welcomeMessage,
       reply_markup: {
         inline_keyboard: [
           ...countries.data.map((e) => [
@@ -45,6 +46,27 @@ bot.on("callback_query", async (query) => {
   const callbackData = query.data;
   console.log(callbackData);
   switch (callbackData.split("_")[0]) {
+    case "start":
+      const countries = await getCountries();
+      const settings = await getSettings();
+      bot.editMessageText(settings.data[0].welcomeMessage, {
+        chat_id: chatId,
+        message_id: query.message.message_id,
+        reply_markup: {
+          inline_keyboard: [
+            ...countries.data.map((e) => [
+              {
+                text: e.name,
+                callback_data: `country_${e.name.split(" ")[0]}_${e.id
+                  }`,
+              },
+            ]),
+          ],
+        },
+        parse_mode: "Markdown",
+      });
+      break;
+
     case "country":
       await storeCountryId(chatId, callbackData.split("_")[2]);
       const countryId31 = callbackData.split("_")[2];
@@ -54,7 +76,9 @@ bot.on("callback_query", async (query) => {
         1
       ).then(async (degrees) => {
 
-        bot.sendMessage(chatId, countryName.name, {
+        bot.editMessageText(countryName.name, {
+          chat_id: chatId,
+          message_id: query.message.message_id,
           reply_markup: {
             inline_keyboard: [
               [{ text: `اسئلة بخصوص ${countryName.name}`, callback_data: `ask_${callbackData.split("_")[2]}` }],
@@ -65,6 +89,7 @@ bot.on("callback_query", async (query) => {
                     }`,
                 },
               ]),
+              [{ text: "رجوع", callback_data: "start" }],
             ],
           },
           parse_mode: "Markdown",
