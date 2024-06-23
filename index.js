@@ -118,6 +118,8 @@ bot.on("callback_query", async (query) => {
                     }`,
                 },
               ]),
+              [{ text: "رجوع الى الدول", callback_data: 'start' }]
+
             ],
           },
           parse_mode: "Markdown",
@@ -168,7 +170,8 @@ bot.on("callback_query", async (query) => {
 
                 []
               ,
-              [{ text: "رجوع", callback_data: `countri_${callbackData.split("_")[1]}_${countryId}` }]
+              [{ text: "رجوع", callback_data: `countri_${callbackData.split("_")[1]}_${countryId}` }],
+              [{ text: "رجوع الى الدول", callback_data: 'start' }]
             ],
           },
 
@@ -237,7 +240,9 @@ bot.on("callback_query", async (query) => {
                   ] :
                     []
               ,
-              [{ text: "رجوع", callback_data: `countri_${callbackData.split("_")[1]}_${countryId2}` }]
+              [{ text: "رجوع", callback_data: `countri_${callbackData.split("_")[1]}_${countryId2}` }],
+              [{ text: "رجوع الى الدول", callback_data: 'start' }]
+
             ],
           },
 
@@ -274,6 +279,8 @@ bot.on("callback_query", async (query) => {
                 callback_data: `countri_${callbackData.split("_")[1]}_${countryId3}`,
 
               }],
+              [{ text: "رجوع الى الدول", callback_data: 'start' }]
+
 
             ],
           },
@@ -319,6 +326,8 @@ bot.on("callback_query", async (query) => {
                 callback_data: `countri_${"jjj"}_${callbackData.split("_")[1]}`,
 
               }],
+              [{ text: "رجوع الى الدول", callback_data: 'start' }]
+
             ],
           },
           parse_mode: "Markdown",
