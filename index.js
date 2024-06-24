@@ -260,7 +260,7 @@ bot.on("callback_query", async (query) => {
       ).then((universities) => {
         const messageText = `الجامعات المتوفره في (${field.name}):\n\n${universities.data.map(
           (e, index) =>
-            `${index + 1}- ${e.universityName}: ${e.price}$ ${e.isValid ? "🟢" : "🔴"
+            `${index + 1}- ${e.universityName}: ${e.price}$ ${e.isValid ? "(التسجيل مفتوح)" : "(التسجيل غير مفتوح)"
             } \n`
         )}`;
         bot.editMessageText(messageText, {
