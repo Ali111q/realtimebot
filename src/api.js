@@ -4,7 +4,7 @@ const { getDegreeId } = require("./helper/sqlit_database");
 // Define the API function to fetch a random dog image
 const getCountries = async () => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/countrys`;
+  const url = `https://study-api.jayak.net/api/countrys`;
 
   try {
     // Make a request to the API
@@ -19,7 +19,7 @@ const getCountries = async () => {
 };
 const getSettings = async () => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/settings`;
+  const url = `https://study-api.jayak.net/api/settings`;
 
   try {
     // Make a request to the API
@@ -34,7 +34,7 @@ const getSettings = async () => {
 };
 const degreesByCountry = async (id, pageNumber) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/degrees?countryId=${id}&pageNumber=${pageNumber ?? 1}`;
+  const url = `https://study-api.jayak.net/api/degrees?countryId=${id}&pageNumber=${pageNumber ?? 1}`;
 
   try {
     // Make a request to the API
@@ -51,7 +51,7 @@ const degreesByCountry = async (id, pageNumber) => {
 const collageByDegree = async (id, page, countryId) => {
 
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/fields?degreeId=${id}&pageNumber=${page ?? 1}&countryId=${countryId}`;
+  const url = `https://study-api.jayak.net/api/fields?degreeId=${id}&pageNumber=${page ?? 1}&countryId=${countryId}`;
   console.log(url);
   try {
     // Make a request to the API
@@ -66,7 +66,7 @@ const collageByDegree = async (id, page, countryId) => {
 };
 const unis = async (countryId, fieldId, degreeId) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/degreefields?fieldId=${fieldId}&countryId=${countryId}&degreeId=${degreeId}`;
+  const url = `https://study-api.jayak.net/api/degreefields?fieldId=${fieldId}&countryId=${countryId}&degreeId=${degreeId}`;
   console.log(url);
   try {
     // Make a request to the API
@@ -82,7 +82,7 @@ const unis = async (countryId, fieldId, degreeId) => {
 
 const asks = async (countryId) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-backend.app-seen.com/api/questions?countryId=${countryId}`;
+  const url = `https://study-api.jayak.net/api/questions?countryId=${countryId}`;
 
   try {
     // Make a request to the API
@@ -97,7 +97,7 @@ const asks = async (countryId) => {
 };
 
 const getCountryById = async (countryId) => {
-  const url = `https://study-backend.app-seen.com/api/countrys/${countryId}`;
+  const url = `https://study-api.jayak.net/api/countrys/${countryId}`;
 
   try {
     // Make a request to the API
@@ -111,7 +111,7 @@ const getCountryById = async (countryId) => {
   }
 }
 const getFieldById = async (fieldId) => {
-  const url = `https://study-backend.app-seen.com/api/fields/${fieldId}`;
+  const url = `https://study-api.jayak.net/api/fields/${fieldId}`;
 
   try {
     // Make a request to the API
@@ -126,7 +126,7 @@ const getFieldById = async (fieldId) => {
 }
 
 const getMedicalFields = async () => {
-  const url = 'https://study-backend.app-seen.com/api/medicalfield';
+  const url = 'https://study-api.jayak.net/api/medicalfield';
   try {
     // Make a request to the API
     const response = await axios.get(url);
