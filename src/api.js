@@ -66,7 +66,7 @@ const collageByDegree = async (id, page, countryId) => {
 };
 const unis = async (countryId, fieldId, degreeId) => {
   // URL for the Dog API endpoint to fetch a random dog image
-  const url = `https://study-api.jayak.net/api/degreefields?fieldId=${fieldId}&countryId=${countryId}&degreeId=${degreeId}`;
+  const url = `https://study-api.jayak.net/api/degreefields?fieldId=${fieldId}&countryId=${countryId}&degreeId=${degreeId}&pageSize=100`;
   console.log(url);
   try {
     // Make a request to the API
