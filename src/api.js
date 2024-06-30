@@ -55,7 +55,12 @@ const collageByDegree = async (id, page, countryId) => {
   console.log(url);
   try {
     // Make a request to the API
-    const response = await axios.get(url);
+    const response = await axios.get(url, {
+      params: {
+        priority: true,
+        pageSize: 12
+      }
+    });
 
     // Return the image URL from the API response
     return response.data; // 'message' field contains the image URL
@@ -148,3 +153,7 @@ module.exports = {
   getFieldById,
   getMedicalFields
 };
+
+
+//       "id": "868a76c2-1b78-4b8b-8351-e588ba8b9091",
+//       "id": "868a76c2-1b78-4b8b-8351-e588ba8b9091",
