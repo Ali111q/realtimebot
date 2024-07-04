@@ -317,7 +317,7 @@ bot.on("callback_query", async (query) => {
                   return [
                     {
                       text: e.questionTitle,
-                      callback_data: `answerv_${e.videoUrl}`,
+                      callback_data: `answerv_${index}`,
                     },
                   ]
                 }
@@ -342,18 +342,20 @@ bot.on("callback_query", async (query) => {
       });
       break;
     case "answerv":
+      console.log(qustionss);
       bot.sendVideo(
         chatId,
-        "https://study-backend.app-seen.com/" + callbackData.split("_")[1],
+        "https://study-api.jayak.net/" + qustionss[callbackData.split("_")[1]].videoUrl,
         {
           parse_mode: "Markdown",
+          caption: qustionss[callbackData.split("_")[1]].questionTitle,
         });
       break;
     case 'medical':
       const medical = await getMedicalFields();
       bot.sendVideo(
         chatId,
-        "https://study-backend.app-seen.com/" + medical.data[0].videoUrl,
+        "https://study-api.jayak.net/" + medical.data[0].videoUrl,
         {
           parse_mode: "Markdown",
         });
