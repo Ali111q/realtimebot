@@ -194,6 +194,9 @@ bot.on("callback_query", async (query) => {
           callbackData.split("_")[2], callbackData.split("_")[3] ?? null, countryId2
         ).then(async (collages) => {
           const countryId30 = await getCountryId(chatId);
+          console.log(collages.pagesCount > collages.currentPage && collages.currentPage > 1);
+          console.log(collages.pagesCount > collages.currentPage);
+          console.log(collages.currentPage > 1);
           bot.editMessageText(callbackData.split("_")[1], {
 
             message_id: query.message.message_id,
@@ -236,7 +239,7 @@ bot.on("callback_query", async (query) => {
                   collages.pagesCount > collages.currentPage ? [
                     {
                       text: "التالي",
-                      callback_data: `degreen_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
+                      callback_data: `degre_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage + 1}`,
                     },
 
                   ] :
@@ -244,7 +247,7 @@ bot.on("callback_query", async (query) => {
 
                       {
                         text: "السابق",
-                        callback_data: `degreen_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage - 1}`,
+                        callback_data: `degre_${callbackData.split("_")[1]}_${callbackData.split("_")[2]}_${collages.currentPage - 1}`,
                       },
                     ] :
                       []
